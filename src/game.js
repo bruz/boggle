@@ -39,8 +39,10 @@ const randomOrderDice = () => {
   const randomized = [];
 
   times(() => {
-    const die = dice[getRandomInt(dice.length)];
+    const index = getRandomInt(dice.length);
+    const die = dice[index];
     randomized.push(die);
+    dice.splice(index, 1);
   }, SIZE*SIZE)
 
   return randomized;
