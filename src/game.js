@@ -52,9 +52,27 @@ const randomDiceValues = () =>
 const generateBoard = () =>
   splitEvery(SIZE, randomDiceValues());
 
-const reducer = (state = { board: generateBoard() }, action) => {
-  console.log('STATE', state);
-  switch(action) {
+export const CLICK_DIE = 'CLICK_DIE';
+
+export const clickDie = (x, y) => ({ type: CLICK_DIE, x, y });
+
+const reducer = (state = { board: generateBoard(), word: [] }, action) => {
+  const { type, x, y } = action;
+  const { board, lastPosition } = state;
+
+  switch(type) {
+    case CLICK_DIE: {
+      if (lastPosition) {
+        if (x === lastPosition.x && y === lastPosition.y) return state;
+
+        if (Math.abs(x - lastPosition.x) > 1 || Math.abs(y - lastPosition.y) > 1) {
+          return state;
+        }
+      }
+      const letter = board[y][x];
+      const updatedWord = state.word.concat(letter);
+      return { ...state, word: updatedWord, lastPosition: { x, y } }
+    }
     default:
       return state;
   }
