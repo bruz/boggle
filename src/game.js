@@ -1,4 +1,4 @@
-import { map, splitEvery, times } from 'ramda';
+import { find, last, splitEvery, times } from 'ramda';
 
 const DICE = [
   'aaafrs',
@@ -58,20 +58,21 @@ export const clickDie = (x, y) => ({ type: CLICK_DIE, x, y });
 
 const reducer = (state = { board: generateBoard(), word: [] }, action) => {
   const { type, x, y } = action;
-  const { board, lastPosition } = state;
+  const { board, word } = state;
+  const lastDie = last(word);
 
   switch(type) {
     case CLICK_DIE: {
-      if (lastPosition) {
-        if (x === lastPosition.x && y === lastPosition.y) return state;
+      if (lastDie) {
+        if (find(die => die.x === x && die.y === y, word)) return state;
 
-        if (Math.abs(x - lastPosition.x) > 1 || Math.abs(y - lastPosition.y) > 1) {
+        if (Math.abs(x - lastDie.x) > 1 || Math.abs(y - lastDie.y) > 1) {
           return state;
         }
       }
       const letter = board[y][x];
-      const updatedWord = state.word.concat(letter);
-      return { ...state, word: updatedWord, lastPosition: { x, y } }
+      const updatedWord = state.word.concat({ letter, x, y });
+      return { ...state, word: updatedWord }
     }
     default:
       return state;
