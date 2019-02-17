@@ -5,11 +5,11 @@ import { addIndex, find, map } from 'ramda';
 import { clickDie } from './game';
 
 const Die = ({ die, x, y, word, clickDie }) => {
-  const inWord = !!find(die => die.x === x && die.y === y, word);
+  const inWord = !!find(d => d.x === x && d.y === y, word);
 
   return (
     <td className="Die" style={{ backgroundColor: inWord && 'rgb(255,255,153)' }} onClick={() => clickDie(x, y)}>
-      {die}
+      {die === 'q' ? 'qu' : die}
     </td>
   )
 }
@@ -22,14 +22,28 @@ const Row = ({ row, y, word, clickDie }) => (
   </tr>
 )
 
-const Board = ({ board, clickDie, word }) => (
-  <table>
-    <tbody>
-      {addIndex(map)((row, index) => (
-        <Row key={index} y={index} row={row} word={word} clickDie={clickDie} />
-      ), board)}
-    </tbody>
-  </table>
-);
+class Board extends React.Component {
+  componentDidMount() {
+    fetch('https://raw.githubusercontent.com/dwyl/english-words/master/words_dictionary.json').then(response => {
+      response.json().then(json => {
+        window.dictionary = json;
+      });
+    })
+  }
+
+  render() {
+    const { board, clickDie, word } = this.props;
+
+    return (
+      <table>
+        <tbody>
+          {addIndex(map)((row, index) => (
+            <Row key={index} y={index} row={row} word={word} clickDie={clickDie} />
+          ), board)}
+        </tbody>
+      </table>
+    );
+  }
+}
 
 export default connect(state => state, { clickDie })(Board);

@@ -5,6 +5,7 @@ import { Provider } from 'react-redux';
 import gameReducer from './game';
 import Board from './Board';
 import Word from './Word';
+import Score from './Score';
 import './App.css';
 
 const store = createStore(
@@ -23,6 +24,7 @@ class App extends Component {
 
           <Board />
           <Word />
+          <Score />
         </div>
       </Provider>
     );

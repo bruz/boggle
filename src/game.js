@@ -55,12 +55,27 @@ const generateBoard = () =>
   splitEvery(SIZE, randomDiceValues());
 
 export const CLICK_DIE = 'CLICK_DIE';
+export const SUBMIT_WORD = 'SUBMIT_WORD';
 
 export const clickDie = (x, y) => ({ type: CLICK_DIE, x, y });
+export const submitWord = () => ({ type: SUBMIT_WORD });
 
-const reducer = (state = { board: generateBoard(), word: [] }, action) => {
+const scoreWord = letters => {
+  const length = letters.length;
+
+  if (length <= 4) return 1;
+  else if (length <= 5) return 2;
+  else if (length <= 6) return 3;
+  else if (length <= 7) return 5;
+  else return 11;
+};
+
+export const expandLetters = letters =>
+  letters.replace(/q/g, 'qu');
+
+const reducer = (state = { board: generateBoard(), word: [], score: 0, completedWords: [] }, action) => {
   const { type, x, y } = action;
-  const { board, word } = state;
+  const { board, completedWords, score, word } = state;
   const lastDie = last(word);
 
   switch(type) {
@@ -81,6 +96,26 @@ const reducer = (state = { board: generateBoard(), word: [] }, action) => {
       const letter = board[y][x];
       const updatedWord = state.word.concat({ letter, x, y });
       return { ...state, word: updatedWord }
+    }
+    case SUBMIT_WORD: {
+      const letters = expandLetters(word.map(die => die.letter).join(''));
+
+      if (window.dictionary[letters]) {
+        const wordScore = scoreWord(letters);
+
+        return {
+          ...state,
+          score: score + wordScore,
+          completedWords: completedWords.concat({ letters, wordScore }),
+          word: [],
+        }
+      } else {
+        return {
+          ...state,
+          score: score - 2,
+          word: [],
+        }
+      }
     }
     default:
       return state;
