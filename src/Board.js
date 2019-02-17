@@ -1,28 +1,32 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { addIndex, map } from 'ramda';
+import { addIndex, find, map } from 'ramda';
 
 import { clickDie } from './game';
 
-const Die = ({ die, x, y, clickDie }) => (
-  <td className="Die" onClick={() => clickDie(x, y)}>
-    {die}
-  </td>
-)
+const Die = ({ die, x, y, word, clickDie }) => {
+  const inWord = !!find(die => die.x === x && die.y === y, word);
 
-const Row = ({ row, y, clickDie }) => (
+  return (
+    <td className="Die" style={{ backgroundColor: inWord && 'rgb(255,255,153)' }} onClick={() => clickDie(x, y)}>
+      {die}
+    </td>
+  )
+}
+
+const Row = ({ row, y, word, clickDie }) => (
   <tr>
     {addIndex(map)((die, index) => (
-      <Die key={index} x={index} y={y} die={die} clickDie={clickDie} />
+      <Die key={index} x={index} y={y} die={die} word={word} clickDie={clickDie} />
     ), row)}
   </tr>
 )
 
-const Board = ({ board, clickDie }) => (
+const Board = ({ board, clickDie, word }) => (
   <table>
     <tbody>
       {addIndex(map)((row, index) => (
-        <Row key={index} y={index} row={row} clickDie={clickDie} />
+        <Row key={index} y={index} row={row} word={word} clickDie={clickDie} />
       ), board)}
     </tbody>
   </table>
