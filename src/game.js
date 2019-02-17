@@ -66,6 +66,12 @@ const reducer = (state = { board: generateBoard(), word: [] }, action) => {
   switch(type) {
     case CLICK_DIE: {
       if (lastDie) {
+        if (x === lastDie.x && y === lastDie.y) {
+          const updatedWord = word.concat()
+          updatedWord.pop();
+          return { ...state, word: updatedWord };
+        }
+
         if (find(die => die.x === x && die.y === y, word)) return state;
 
         if (Math.abs(x - lastDie.x) > 1 || Math.abs(y - lastDie.y) > 1) {
