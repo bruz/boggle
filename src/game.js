@@ -1,4 +1,4 @@
-import { find, last, splitEvery, times } from 'ramda';
+import { equals, find, last, map, splitEvery, times } from 'ramda';
 
 const DICE = [
   'aaafrs',
@@ -98,6 +98,12 @@ const reducer = (state = { board: generateBoard(), word: [], score: 0, completed
       return { ...state, word: updatedWord }
     }
     case SUBMIT_WORD: {
+      const alreadyAdded = !!map(cw => cw.word, completedWords).find(w => equals(word, w))
+      if (alreadyAdded) {
+        alert('Word has already been added')
+        return state;
+      }
+
       const letters = expandLetters(word.map(die => die.letter).join(''));
 
       if (window.dictionary[letters]) {
@@ -106,7 +112,7 @@ const reducer = (state = { board: generateBoard(), word: [], score: 0, completed
         return {
           ...state,
           score: score + wordScore,
-          completedWords: completedWords.concat({ letters, wordScore }),
+          completedWords: completedWords.concat({ word, wordScore }),
           word: [],
         }
       } else {

@@ -2,11 +2,17 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { addIndex, map } from 'ramda';
 
-const CompletedWord = ({ word }) => (
-  <li>
-    {word.letters}: {word.wordScore}
-  </li>
-)
+import { expandLetters } from './game';
+
+const CompletedWord = ({ word }) => {
+  const letters = expandLetters(word.word.map(d => d.letter).join(''));
+
+  return (
+    <li>
+      {letters}: {word.wordScore}
+    </li>
+  )
+}
 
 const Score = ({ completedWords, score }) => (
   <div>
