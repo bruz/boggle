@@ -7,6 +7,7 @@ import Board from './Board';
 import Word from './Word';
 import Score from './Score';
 import Timer from './Timer';
+import Leaderboard from './Leaderboard';
 import './App.css';
 
 const store = createStore(
@@ -27,6 +28,7 @@ class App extends Component {
           <Board />
           <Word />
           <Score />
+          <Leaderboard />
         </div>
       </Provider>
     );

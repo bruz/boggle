@@ -1,4 +1,4 @@
-import { equals, find, last, map, splitEvery, times } from 'ramda';
+import { equals, find, last, map, sortBy, splitEvery, times } from 'ramda';
 import moment from 'moment';
 
 const DICE = [
@@ -57,9 +57,11 @@ const generateBoard = () =>
 
 export const CLICK_DIE = 'CLICK_DIE';
 export const SUBMIT_WORD = 'SUBMIT_WORD';
+export const OUT_OF_TIME = 'OUT_OF_TIME';
 
 export const clickDie = (x, y) => ({ type: CLICK_DIE, x, y });
 export const submitWord = () => ({ type: SUBMIT_WORD });
+export const outOfTime = name => ({ type: OUT_OF_TIME, name });
 
 const scoreWord = letters => {
   const length = letters.length;
@@ -80,11 +82,12 @@ const initialState = () => ({
   score: 0,
   completedWords: [],
   endTime: moment().add(3, 'minutes'),
+  leaderboard: [],
 })
 
 const reducer = (state = initialState(), action) => {
   const { type, x, y } = action;
-  const { board, completedWords, score, word } = state;
+  const { board, completedWords, leaderboard, score, word } = state;
   const lastDie = last(word);
 
   switch(type) {
@@ -130,6 +133,13 @@ const reducer = (state = initialState(), action) => {
           score: score - 2,
           word: [],
         }
+      }
+    }
+    case OUT_OF_TIME: {
+      const leaders = leaderboard.concat({ name: action.name, score: score });
+      return {
+        ...initialState(),
+        leaderboard: sortBy(l => -l.score, leaders),
       }
     }
     default:
