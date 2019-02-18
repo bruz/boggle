@@ -1,3 +1,9 @@
+> Well I'm the king of Boggle, there is none higher
+> I get eleven points off the word 'quagmire'
+
+-- Beastie Boys
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
