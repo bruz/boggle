@@ -6,6 +6,7 @@ import gameReducer from './game';
 import Board from './Board';
 import Word from './Word';
 import Score from './Score';
+import Timer from './Timer';
 import './App.css';
 
 const store = createStore(
@@ -22,6 +23,7 @@ class App extends Component {
             BOGGLE!
           </header>
 
+          <Timer />
           <Board />
           <Word />
           <Score />

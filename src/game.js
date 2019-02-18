@@ -1,4 +1,5 @@
 import { equals, find, last, map, splitEvery, times } from 'ramda';
+import moment from 'moment';
 
 const DICE = [
   'aaafrs',
@@ -73,7 +74,15 @@ const scoreWord = letters => {
 export const expandLetters = letters =>
   letters.replace(/q/g, 'qu');
 
-const reducer = (state = { board: generateBoard(), word: [], score: 0, completedWords: [] }, action) => {
+const initialState = () => ({
+  board: generateBoard(),
+  word: [],
+  score: 0,
+  completedWords: [],
+  endTime: moment().add(3, 'minutes'),
+})
+
+const reducer = (state = initialState(), action) => {
   const { type, x, y } = action;
   const { board, completedWords, score, word } = state;
   const lastDie = last(word);
